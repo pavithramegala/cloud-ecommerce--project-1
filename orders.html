@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Orders</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<nav>
+    <a href="products.html">Products</a> |
+    <a href="viewcart.html">Cart</a> |
+    <a href="orders.html">Orders</a> |
+    <a href="login.html">Login</a>
+</nav>
+
+<br>
+<h1>My Orders</h1>
+
+<div id="orders"></div>
+
+
+<script>
+
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+let output = "";
+
+if(orders.length === 0){
+
+    output = "<h3>No Orders Found</h3>";
+
+}
+else{
+
+    orders.forEach(order => {
+
+        output += `
+        <div>
+            <h3>${order.name}</h3>
+            <p>Price: ₹${order.price}</p>
+            <hr>
+        </div>
+        `;
+
+    });
+
+}
+
+
+document.getElementById("orders").innerHTML = output;
+
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Cart</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<nav>
+    <a href="products.html">Products</a> |
+    <a href="viewcart.html">Cart</a> |
+    <a href="orders.html">Orders</a> |
+    <a href="login.html">Login</a>
+</nav>
+
+<br>
+<h1>Your Cart</h1>
+
+<div id="cartItems"></div>
+
+<h2 id="total"></h2>
+<button onclick="checkout()">
+    Checkout
+</button>
+<script>
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+let output = "";
+let total = 0;
+
+
+if(cart.length === 0){
+
+    output = "<h3>Cart is Empty</h3>";
+
+}
+else{
+
+    cart.forEach(item => {
+
+        output += `
+        <div>
+            <h3>${item.name}</h3>
+            <p>Price: ₹${item.price}</p>
+        </div>
+        <hr>
+        `;
+
+        total += Number(item.price);
+
+    });
+
+}
+
+
+document.getElementById("cartItems").innerHTML = output;
+
+document.getElementById("total").innerHTML = 
+"Total: ₹" + total;
+function checkout() {
+
+    let total = 0;
+
+    cart.forEach(item => {
+        total += Number(item.price);
+    });
+
+    fetch("http://localhost:8000/place-order", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            user_id: 1,
+            total: total
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        alert(data.message);
+
+        localStorage.removeItem("cart");
+
+        window.location.href = "orders.html";
+
+    })
+    .catch(err => {
+        console.log(err);
+    });
+
+}
+
+</script>
+
+</body>
+</html>
